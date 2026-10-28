@@ -1,0 +1,28 @@
+name: Price Tracker Bot
+
+on:
+  schedule:
+    - cron: '0 8 * * *' # S'exécute tous les jours à 08:00 UTC
+  workflow_dispatch: # Permet un lancement manuel depuis l'onglet Actions
+
+jobs:
+  run-tracker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout du code
+        uses: actions/checkout@v4
+
+      - name: Configuration de Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Installation des dépendances
+        run: |
+          pip install requests
+
+      - name: Lancement du script de suivi des prix
+        env:
+          SERPAPI_KEY: ${{ secrets.SERPAPI_KEY }}
+        run: |
+          python price_tracker.py
